@@ -10,7 +10,7 @@ def sayCommand(text):
 
 
 if __name__ == '__main__':
-    sayCommand("Initializing Jarvis . . .")
+    sayCommand("Initializing alexa . . .")
     
     while True:
         # obtain audio from the microphone
@@ -19,9 +19,10 @@ if __name__ == '__main__':
         try:
             with sr.Microphone() as source:
                 print("Say something...")
-                audio = r.listen(source,timeout=2)
+                audio = r.listen(source,timeout=2,phrase_time_limit=3)
             command = r.recognize_google(audio)
-            print(command)
-            sayCommand(command)
+            if(command.lower() == 'alexa'):
+                sayCommand("Yess boss!!")
         except Exception as e:
+            print(e)
             print("An error occured; {0}".format(e))
