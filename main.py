@@ -2,6 +2,9 @@ import speech_recognition as sr
 import pyttsx3
 import webbrowser
 from musicLibrary import musics
+import requests
+
+
 recognizer = sr.Recognizer();
 engine = pyttsx3.init()
 
@@ -27,9 +30,24 @@ def processCommand(command:str):
         webbrowser.open(serch_song)
         sayCommand(f"Playing {song_req}")
     elif command.lower().startswith('news'):
-        news_country = command.split('news')[1].strip();
-        news_from_API = 'https://newsapi.org/v2/top-headlines?country={news_country}&apiKey=14dea05a5f53437e8c827a5577223a63'.format(news_country)
-        print(news_from_API)
+        news_req = command.split('news')[1].strip();
+        news_from_API = 'https://newsapi.org/v2/top-headlines?country={}&apiKey=14dea05a5f53437e8c827a5577223a63';
+        if news_req.lower() == 'us':
+           news_from_API = news_from_API.format('us')
+        else:
+            news_from_API = news_from_API.format('in');
+        print(news_from_API);
+        response = requests.get(news_from_API);
+        if response.status_code == 200:
+            data = response.json();
+            articles = data.get('articles')
+            for article in articles:
+                print(article.get('title'))
+                sayCommand(article.get('title'))
+        else:
+            print(f"Request failed with status code {response.status_code}")
+
+
 if __name__ == '__main__':
     sayCommand("Initializing Jarvis")
     
@@ -46,10 +64,12 @@ if __name__ == '__main__':
                 sayCommand("Yess boss!!")
                 with sr.Microphone() as source:
                     print("Jarvis Activated ...")
-                    audio = r.listen(source,timeout=2,phrase_time_limit=4);
+                    audio = r.listen(source,timeout=2,phrase_time_limit=3);
                     command = r.recognize_google(audio)
                     processCommand(command)
 
 
         except Exception as e:
             print("An error occured; {0}".format(e))
+
+
