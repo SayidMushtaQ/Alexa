@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
 import webbrowser
+from musicLibrary import musics
 recognizer = sr.Recognizer();
 engine = pyttsx3.init()
 
@@ -8,12 +9,27 @@ def sayCommand(text):
     engine.say(text)
     engine.runAndWait()
 def processCommand(command:str):
+
     if 'open youtube and search' in command.lower():
         search_query = command.split('search')[1].strip()
         print(search_query)
-        print(command)
+        sayCommand(f"Searching {search_query} on yoututbe")
         webbrowser.open_new(f'https://www.youtube.com/results?search_query={search_query.replace(' ','+')}')
-
+    elif 'open youtube' in command.lower():
+        sayCommand("opening youTube")
+        webbrowser.open('https://www.youtube.com/')
+    elif 'open facebook' in command.lower():
+        sayCommand("Opening facebook")
+        webbrowser.open('https://www.likdin.com/')
+    elif command.lower().startswith('play'):
+        song_req = command.split('play')[1].strip();
+        serch_song = musics.get(song_req);
+        webbrowser.open(serch_song)
+        sayCommand(f"Playing {song_req}")
+    elif command.lower().startswith('news'):
+        news_country = command.split('news')[1].strip();
+        news_from_API = 'https://newsapi.org/v2/top-headlines?country={news_country}&apiKey=14dea05a5f53437e8c827a5577223a63'.format(news_country)
+        print(news_from_API)
 if __name__ == '__main__':
     sayCommand("Initializing Jarvis")
     
@@ -30,7 +46,7 @@ if __name__ == '__main__':
                 sayCommand("Yess boss!!")
                 with sr.Microphone() as source:
                     print("Jarvis Activated ...")
-                    audio = r.listen(source,timeout=2);
+                    audio = r.listen(source,timeout=2,phrase_time_limit=4);
                     command = r.recognize_google(audio)
                     processCommand(command)
 
