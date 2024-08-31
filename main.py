@@ -46,7 +46,8 @@ def processCommand(command:str):
                 sayCommand(article.get('title'))
         else:
             print(f"Request failed with status code {response.status_code}")
-
+    else:
+        pass
 
 if __name__ == '__main__':
     sayCommand("Initializing Jarvis")
