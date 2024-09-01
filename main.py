@@ -37,10 +37,10 @@ def processCommand(command:str):
         webbrowser.open_new(f'https://www.youtube.com/results?search_query={search_query.replace(' ','+')}')
     elif 'open youtube' in command.lower():
         say("opening youTube")
-        webbrowser.open('https://www.youtube.com/')
+        webbrowser.open('https://www.youtube.com')
     elif 'open facebook' in command.lower():
         say("Opening facebook")
-        webbrowser.open('https://www.facebook.com/')
+        webbrowser.open('https://www.facebook.com')
     elif command.lower().startswith('play'):
         song_req = command.split('play')[1].strip();
         serch_song = musics.get(song_req);
